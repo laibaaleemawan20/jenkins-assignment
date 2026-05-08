@@ -47,7 +47,7 @@ pipeline {
 
                 curl -s http://127.0.0.1:3000 > /dev/null || (cat app.log && exit 1)
 
-                BASE_URL=http://127.0.0.1:3000 npm test
+                BASE_URL=http://localhost:3000 npm test
 
                 kill $APP_PID || true
                 '''
