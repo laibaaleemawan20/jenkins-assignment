@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "typegen": "npx sanity@latest schema extract && npx sanity@latest typegen generate"
+    "typegen": "npx sanity@latest schema extract && npx sanity@latest typegen generate",
+    "test": "node tests/selenium.test.js"
   },
   "dependencies": {
     "@clerk/nextjs": "^6.12.6",
@@ -51,8 +52,10 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "chromedriver": "^147.0.4",
     "eslint": "^9",
     "eslint-config-next": "15.2.1",
+    "selenium-webdriver": "^4.43.0",
     "tailwindcss": "^4",
     "typescript": "^5"
   }
