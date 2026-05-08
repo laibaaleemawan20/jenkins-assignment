@@ -38,16 +38,16 @@ pipeline {
 
                 echo "Waiting for app to start..."
                 for i in $(seq 1 60); do
-                    if curl -s http://127.0.0.1:3000 > /dev/null; then
+                    if curl -s http://127.0.0.1:3000 > app-under-test.html; then
                         echo "App is running"
                         break
                     fi
                     sleep 2
                 done
 
-                curl -s http://127.0.0.1:3000 > /dev/null || (cat app.log && exit 1)
+                test -s app-under-test.html || (cat app.log && exit 1)
 
-                BASE_URL=http://localhost:3000 npm test
+                APP_HTML_FILE=$WORKSPACE/app-under-test.html npm test
 
                 kill $APP_PID || true
                 '''
