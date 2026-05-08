@@ -9,7 +9,7 @@ pipeline {
         NEXT_PUBLIC_SANITY_API_VERSION = "2024-01-01"
         SANITY_API_TOKEN = "dummy_token"
         SANITY_API_READ_TOKEN = "dummy_read_token"
-        NEXT_PUBLIC_BASE_URL = "http://16.16.172.60:3000"
+        NEXT_PUBLIC_BASE_URL = "http://127.0.0.1:3000"
         NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY = "pk_test_ZHVtbXkta2V5JA"
         CLERK_SECRET_KEY = "sk_test_dummy"
     }
@@ -30,11 +30,26 @@ pipeline {
         stage('Test') {
             steps {
                 sh '''
+                pkill -f "next start" || true
                 pkill -f "next dev" || true
-                npm run dev -- --hostname 0.0.0.0 > app.log 2>&1 &
-                sleep 25
-                BASE_URL=http://127.0.0.1:3000 npm test || BASE_URL=http://16.16.172.60:3000 npm test
-                pkill -f "next dev" || true
+
+                npx next start -H 0.0.0.0 -p 3000 > app.log 2>&1 &
+                APP_PID=$!
+
+                echo "Waiting for app to start..."
+                for i in $(seq 1 60); do
+                    if curl -s http://127.0.0.1:3000 > /dev/null; then
+                        echo "App is running"
+                        break
+                    fi
+                    sleep 2
+                done
+
+                curl -s http://127.0.0.1:3000 > /dev/null || (cat app.log && exit 1)
+
+                BASE_URL=http://127.0.0.1:3000 npm test
+
+                kill $APP_PID || true
                 '''
             }
         }

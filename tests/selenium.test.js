@@ -15,6 +15,11 @@ async function createDriver() {
   options.addArguments('--remote-debugging-port=9222');
   options.addArguments('--user-data-dir=/tmp/chrome-selenium-profile-' + Date.now());
   options.addArguments('--window-size=1366,768');
+  options.addArguments('--no-proxy-server');
+  options.addArguments('--proxy-server=direct://');
+  options.addArguments('--proxy-bypass-list=*');
+  options.addArguments('--disable-extensions');
+  options.addArguments('--disable-software-rasterizer');
 
   return await new Builder()
     .forBrowser('chrome')
