@@ -45,4 +45,14 @@ pipeline {
             }
         }
     }
+
+    post {
+        always {
+            emailext(
+                to: 'laibaaleemawan@gmail.com',
+                subject: "Jenkins Assignment Build ${env.BUILD_NUMBER}: ${currentBuild.currentResult}",
+                body: "Project: ${env.JOB_NAME}\nBuild Number: ${env.BUILD_NUMBER}\nStatus: ${currentBuild.currentResult}\nBuild URL: ${env.BUILD_URL}\n\nSelenium tests were executed in the Jenkins pipeline."
+            )
+        }
+    }
 }
