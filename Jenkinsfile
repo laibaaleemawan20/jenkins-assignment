@@ -29,7 +29,14 @@ pipeline {
 
         stage('Test') {
             steps {
-                sh 'npm test'
+                sh '''
+                pkill -f "next dev" || true
+                rm -rf /tmp/chrome-selenium-profile*
+                npm run dev -- --hostname 0.0.0.0 > app.log 2>&1 &
+                sleep 25
+                BASE_URL=http://16.16.172.60:3000 npm test
+                pkill -f "next dev" || true
+                '''
             }
         }
 
